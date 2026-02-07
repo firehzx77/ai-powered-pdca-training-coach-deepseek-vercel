@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "offline",
+    "rootDir": ".",
+    "types": []
+  },
+  "include": [
+    "offline/shims.d.ts",
+    "index.tsx",
+    "App.tsx",
+    "types.ts",
+    "services/geminiService.ts"
+  ],
+  "exclude": ["api", "node_modules", "dist"]
+}
