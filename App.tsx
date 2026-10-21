@@ -65,6 +65,7 @@ export default function App() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [auditResult, setAuditResult] = useState<string | null>(null);
+  const [isExportingWord, setIsExportingWord] = useState(false);
   
   const chatEndRef = useRef<HTMLDivElement>(null);
   const coach = useMemo(() => new AICoachService(), []);
@@ -160,6 +161,19 @@ export default function App() {
     a.href = url;
     a.download = `pdca_${activeMode}_${new Date().toISOString().slice(0,10)}.${format}`;
     a.click();
+  };
+
+  const exportWord = async () => {
+    setIsExportingWord(true);
+    try {
+      const { exportPdcaWord } = await import('./services/wordExport');
+      await exportPdcaWord({ mode: activeMode, data: currentPDCAStep, auditResult });
+    } catch (error) {
+      console.error('Word export failed:', error);
+      alert('Word 文档生成失败，请稍后重试。');
+    } finally {
+      setIsExportingWord(false);
+    }
   };
 
   const renderField = (key: string, label: string, placeholder: string) => {
@@ -294,10 +308,18 @@ export default function App() {
             <Settings2 size={18} /> 教师点评
           </button>
           <button 
-            onClick={() => exportData('json')}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium shadow-md shadow-indigo-100 transition-all"
+            onClick={exportWord}
+            disabled={isExportingWord}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium shadow-md shadow-indigo-100 transition-all disabled:opacity-60"
           >
-            <Download size={18} /> 导出
+            <FileText size={18} /> {isExportingWord ? '生成中…' : '导出 Word'}
+          </button>
+          <button 
+            onClick={() => exportData('json')}
+            title="导出原始数据 (JSON)"
+            className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-all"
+          >
+            <Download size={18} /> JSON
           </button>
         </div>
       </header>
