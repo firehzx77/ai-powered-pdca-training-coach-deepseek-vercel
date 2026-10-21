@@ -19,7 +19,8 @@
     "index.tsx",
     "App.tsx",
     "types.ts",
-    "services/geminiService.ts"
+    "services/geminiService.ts",
+    "services/wordExport.ts"
   ],
   "exclude": ["api", "node_modules", "dist"]
 }
